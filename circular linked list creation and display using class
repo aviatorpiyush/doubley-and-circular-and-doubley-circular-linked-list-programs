@@ -1,0 +1,96 @@
+#include<iostream>
+using namespace std;
+class node
+{
+public:
+    int data;
+    node * next;
+};
+class circularlinkedlist
+{
+private:
+    node *head;
+public:
+    circularlinkedlist(int A[],int n);
+    void display();
+    void recursivedisplay(node *p);
+    node *gethead()
+    {
+        return head;
+    }
+    ~circularlinkedlist();
+
+};
+circularlinkedlist::circularlinkedlist(int *A,int n)
+{
+    node *t;
+    node *tail;
+    head=new node;
+    head->data=A[0];
+    head->next=head;
+    tail=head;
+    for(int i=1;i<n;i++)
+    {
+        t=new node;
+        t->data=A[i];
+        t->next=tail->next;
+        tail->next=t;
+        tail=t;
+    }
+}
+void circularlinkedlist::display()
+{
+    node *p=head;
+    do
+    {
+        cout<<p->data<<" ";
+        p=p->next;
+
+    }while(p!=head);
+    cout<<endl;
+}
+
+void circularlinkedlist::recursivedisplay(node *p)
+{
+    static int flag=0;
+    if(p!=head || flag==0)
+    {
+        flag=1;
+        cout<<p->data<<" ";
+        recursivedisplay(p->next);
+    }
+    flag=0;
+
+}
+
+circularlinkedlist::~circularlinkedlist()
+{
+    node *p=head;
+    while(p->next!=head)
+    {
+     p=p->next;
+    }
+    while(p!=head)
+    {
+        p->next=head->next;
+        delete head;
+        head=p->next;
+    }
+    if(p==head)
+    {
+        delete head;
+        head=nullptr;
+    }
+
+}
+
+int main()
+{
+    int A[]={1,2,3,5,7,9};
+    circularlinkedlist cl(A,sizeof(A));
+    cl.display();
+    cout<<"\n";
+    node*h=cl.gethead();
+    cl.recursivedisplay(h);
+    return 0;
+}
